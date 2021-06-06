@@ -4,28 +4,59 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-from eralchemy import render_er
+from sqlalchemy import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
+class User(Base):
+    __tablename__ = 'Users'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-
-class Address(Base):
-    __tablename__ = 'address'
+    username = Column(String(250), nullable=False)
+    password = Column(String(250), nullable =False)
+    Followers = Column(Integer)
+    Following = Column(Integer)
+    Description = Column(String(250))
+    
+class Post(Base):
+    __tablename__ = 'Posts'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    Description = Column(String(250))
+    Comments = Column(String(250))
+    person_id = Column(Integer, ForeignKey('Users.id'))
+    person = relationship(User)
+    
+class User_Liked_Posts(Base):
+    __tablename__ = 'liked_posts_byuser'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('Users.id'))
+    user= relationship(User)
+    post_id = Column(Integer, ForeignKey('Posts.id'))
+    post = relationship(Post)
 
+class Post_Comments(Base):
+    __tablename__ = 'comment'
+    id = Column(Integer, primary_key=True)
+    comment_text = Column(String(250))
+    user_id= Column(Integer, ForeignKey('Users.id'))
+    user=relationship(User)
+    post_id= Column(Integer, ForeignKey('Posts.id'))
+    post=relationship(Post)
+
+
+# class Followers(Base):
+#     __tablename__ = 'User_Followers'
+#     # Here we define columns for the table address.
+#     # Notice that each column is also a normal Python instance attribute.
+#     id = Column(Integer, primary_key=True)
+#     post_id = Column(Integer, ForeignKey('Posts.id'))
+#     post = relationship(Post) 
+    
+
+    
     def to_dict(self):
         return {}
 
