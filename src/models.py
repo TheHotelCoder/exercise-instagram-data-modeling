@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-from sqlalchemy import render_er
+from eralchemy import render_er
 
 Base = declarative_base()
 
@@ -18,6 +18,8 @@ class User(Base):
     Followers = Column(Integer)
     Following = Column(Integer)
     Description = Column(String(250))
+    LikedPosts= relationship('liked_posts_byuser', back_populates="Users")
+ 
     
 class Post(Base):
     __tablename__ = 'Posts'
@@ -33,11 +35,12 @@ class User_Liked_Posts(Base):
     __tablename__ = 'liked_posts_byuser'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('Users.id'))
-    user= relationship(User)
+    user= relationship(User, back_populates="liked_posts_byuser")
     post_id = Column(Integer, ForeignKey('Posts.id'))
     post = relationship(Post)
+   
 
-class Post_Comments(Base):
+class Post_Comments_By_User(Base):
     __tablename__ = 'comment'
     id = Column(Integer, primary_key=True)
     comment_text = Column(String(250))
